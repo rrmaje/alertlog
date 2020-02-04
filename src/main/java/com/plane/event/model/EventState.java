@@ -1,10 +1,23 @@
-package com.plane.event;
+package com.plane.event.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "event_state")
 public class EventState {
 
 	public final static String FINISHED = "FINISHED";
 
 	public final static String STARTED = "STARTED";
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long serialId;
 
 	private String id;
 
@@ -12,14 +25,29 @@ public class EventState {
 
 	private long timestamp;
 
+	@Column(nullable = true)
 	private String type;
 
+	@Column(nullable = true)
 	private String host;
+
+	@Column(nullable = true)
+	private Integer bucket;
 
 	public EventState() {
 
 	}
 
+	public EventState(String id, String state, long timestamp, String type, String host, int bucket) {
+		super();
+		this.id = id;
+		this.state = state;
+		this.timestamp = timestamp;
+		this.type = type;
+		this.host = host;
+		this.bucket = bucket;
+	}
+	
 	public EventState(String id, String state, long timestamp, String type, String host) {
 		super();
 		this.id = id;
@@ -53,7 +81,6 @@ public class EventState {
 		this.host = host;
 	}
 
-
 	public String getState() {
 		return state;
 	}
@@ -68,6 +95,10 @@ public class EventState {
 
 	public String getHost() {
 		return host;
+	}
+
+	public Integer getBucket() {
+		return bucket;
 	}
 
 }

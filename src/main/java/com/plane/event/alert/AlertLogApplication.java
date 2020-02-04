@@ -8,11 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import com.plane.event.DatabaseBackedFileManager;
 
 @SpringBootApplication
+@EntityScan("com.plane.event.model")
+@EnableJpaRepositories({ "com.plane.event" })
 public class AlertLogApplication implements CommandLineRunner {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AlertLogApplication.class);
@@ -35,7 +39,7 @@ public class AlertLogApplication implements CommandLineRunner {
 		} else {
 			String fileName = args[0];
 
-			fileManager.withFileName(fileName).withBatchSize(200_000).withBuckets(10).run();
+			fileManager.withFileName(fileName).withBatchSize(100_000).withBuckets(10).run();
 		}
 
 	}

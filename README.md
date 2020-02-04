@@ -13,11 +13,11 @@ Lines with matching ids are combined and inserted as Alerts into database if thr
 After all batches are executed, a process is started to combine records from each bucket into alerts.
 
 Program attempts to optimize usage of memory and I/O using below parameters
-* batchSize - max number of lines as input to worker thread - memory intensive - use smaller batches to avoid OutOfMemory exceptions(defaults to 200_000)
+* batchSize - max number of lines as input to worker thread - memory intensive - use smaller batches to avoid OutOfMemory exceptions(defaults to 100_000)
 * maxLength - max number of lines to process(no limit by default)
 * threshold - above which Alert is created in database(defaults to 4ms)
 * threadPoolSize - number of worker threads(default 2 cores)
-* numberOfBuckets - number of tables indexed from 0 to store unmatched lines from single batch(defaults to 10)
+* numberOfBuckets - number of buckets indexed from 0 to store unmatched lines from single batch(defaults to 10)
 
 
 #### Reference Documentation

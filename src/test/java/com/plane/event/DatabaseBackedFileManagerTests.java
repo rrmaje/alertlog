@@ -10,19 +10,26 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.plane.event.alert.AlertLogApplication;
+import com.plane.event.model.EventState;
 
 @SpringBootTest(classes = AlertLogApplication.class)
+@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
+@AutoConfigureTestDatabase(replace = Replace.ANY)
 public class DatabaseBackedFileManagerTests {
 
 	private static final String FILE_NAME = "eventlog.json.0";
@@ -49,9 +56,6 @@ public class DatabaseBackedFileManagerTests {
 	@Order(2)
 	void givenEventStates_WhenThresholdNotExceeded_ThenAlertNotCreated() throws Exception {
 
-		
-		fileManager.recreateSchema();
-		
 		fileManager.withBuckets(10).withFileName(FILE_NAME).withBatchSize(200_000).withMaxLength(2 * ALERTS_SIZE)
 				.withThreshold(100_000);
 
@@ -86,7 +90,7 @@ public class DatabaseBackedFileManagerTests {
 
 		ByteBuffer buffer = ByteBuffer.allocate(1024);
 
-		long bytesWritten = IntStream.range(0, ALERTS_SIZE + 1).mapToLong(i -> {
+		long bytesWritten = LongStream.range(0, ALERTS_SIZE + 1).map(i -> {
 
 			int b = 0;
 
